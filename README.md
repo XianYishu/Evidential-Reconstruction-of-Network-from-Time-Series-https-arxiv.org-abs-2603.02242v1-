@@ -40,17 +40,3 @@ Load your ground‑truth adjacency matrix (binary, no self‑loops) as an `n × 
 
 ```matlab
 load("your_network.mat")   % contains variable 'A' or rename to 'G_graph'
-
-Give a simple example:
-Set simulation parameters
-Time_max = 2000;          % length of each time series
-num_sources = 5;          % number of different infection seeds
-beta = 0.4;               % infection rate (unknown in practice, but used to generate data)
-gamma = 0.85;             % recovery rate
-
-The output result is:
-All simulations completed successfully
-Reconstruction rate (s): 100.00%
-Redundancy rate (r): 1.28%
-
-The output result has errors.
