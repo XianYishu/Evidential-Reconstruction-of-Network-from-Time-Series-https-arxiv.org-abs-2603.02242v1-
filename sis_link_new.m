@@ -1,6 +1,6 @@
 %% Helper Functions
 
-function [m_T, m_F, m_TF, time_series] = sis_link_new(G_graph, beta, gamma, Time_max, ~)
+function [m_T, m_F, m_TF, time_series] = sis_link_new(G_graph, beta, gamma, Time_max, seed_nodes)
 % Simulate SIS dynamics and compute first-level fused BPA for a single source.
 % Input:
 %   G_graph  - n x n true adjacency matrix
@@ -13,8 +13,11 @@ function [m_T, m_F, m_TF, time_series] = sis_link_new(G_graph, beta, gamma, Time
     n = length(G_graph);
     time_series = zeros(Time_max, n);
     % fixed initial infected nodes
-    for s = 1:10
-        seed_nodes(s) = randi(n);
+    if ~exist('seed_nodes', 'var') || isempty(seed_nodes)
+        seed_nodes = zeros(1, 10);  % 预分配
+        for s = 1:10
+            seed_nodes(s) = randi(n);
+        end
     end
     time_series(1, seed_nodes) = 1;
     

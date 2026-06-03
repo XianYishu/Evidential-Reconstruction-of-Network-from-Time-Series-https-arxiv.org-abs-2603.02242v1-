@@ -1,6 +1,6 @@
 %% Evidential Network Reconstruction - Main Script
 % Based on Dempster-Shafer evidence theory
-clear; clc;
+clear; clc;close all
 
 % Load ground truth network (Karate club)
 load("network-Karate_adj_matrix.mat")
@@ -10,8 +10,9 @@ n = length(G_graph);                  % number of nodes
 % SIS simulation parameters
 Time_max = 2000;                      % length of each time series
 num_sources = 5;                      % number of independent infection sources
-beta = 0.43;                           % infection rate
+beta = 0.45;                           % infection rate
 gamma = 0.9;                         % recovery rate
+seed_nodes = [];
 
 % Preallocate cell arrays for BPAs from each source
 m_T_cell = cell(1, num_sources);      % belief for connection (m{T})
@@ -21,7 +22,7 @@ Time_cell = cell(1, num_sources);     % raw time series (for validation)
 
 parfor i = 1:num_sources
     [m_T_cell{i}, m_F_cell{i}, m_TF_cell{i}, Time_cell{i}] = ...
-        sis_link_new(G_graph, beta, gamma, Time_max);
+        sis_link_new(G_graph, beta, gamma, Time_max,seed_nodes);
 end
 
 % Check if any simulation failed (empty output)
@@ -115,8 +116,10 @@ end
 % Select threshold that gives maximum Jaccard similarity
 optimal_rho = threshold_range(Jaccard_vals == max(Jaccard_vals));
 A_recon = m_T_final >= optimal_rho;
+estimated_beta = max(Jaccard_vals);
 
 % Evaluate reconstruction performance (requires true network for benchmark)
 [s, r] = similarity(G_graph, A_recon);
 disp(['Reconstruction rate (s): ', num2str(s*100), '%']);
 disp(['Redundancy rate (r): ', num2str(r*100), '%']);
+disp(['Estimated infection rate beta: ', num2str(estimated_beta)]);

@@ -5,22 +5,22 @@
 % Then selects the closest values from the two sets and evaluates reliability via Eq.(18).
 %
 % Input variables (from main script):
-%   Time        - cell array of original time series (Tmax x n binary)
-%   r           - reconstructed adjacency matrix (n x n)
-%   p_gr        - estimated infection rate (gamma_estimated)
-%   p_hf        - estimated recovery rate (optimal_rho)
-%   Time_max    - length of each time series (Tmax)
+%   Time_cell               - cell array of original time series (Tmax x n binary)
+%   A_recon                 - reconstructed adjacency matrix (n x n)
+%   estimated_beta          - estimated infection rate (gamma_estimated)
+%   gamma_estimated         - estimated recovery rate (optimal_rho)
+%   Time_max                - length of each time series (Tmax)
 %
 % Output: displays relative deviation delta_KL as "Redundancy rate (r): ..."
 
-num_sources = length(Time);
+num_sources = length(Time_cell);
 num_sim = num_sources;   % one simulated series per original source (seed-synchronized)
 
 % 1. Compute all pairwise KL divergences among original series (i<j)
 kl_orig = [];
 for i = 1:num_sources
     for j = i+1:num_sources
-        kl_val = KL(Time{i}, Time{j});
+        kl_val = KL(Time_cell{i}, Time_cell{j});
         kl_orig = [kl_orig, kl_val];
     end
 end
@@ -30,12 +30,12 @@ end
 kl_sim = [];
 for idx = 1:num_sim
     % extract initial infected nodes from the idx-th original series
-    seed_nodes = find(Time{idx}(1, :) == 1);
+    seed_nodes = find(Time_cell{idx}(1, :) == 1);
     % simulate with identical seeds
-    time_sim = simulate_sis_with_seeds(r, p_gr, p_hf, Time_max, seed_nodes);
+    time_sim = simulate_sis_with_seeds(A_recon, estimated_beta, gamma_estimated, Time_max, seed_nodes);
     % compute KL with all original series
     for j = 1:num_sources
-        kl_val = KL(Time{j}, time_sim);
+        kl_val = KL(Time_cell{j}, time_sim);
         kl_sim = [kl_sim, kl_val];
     end
 end
@@ -58,8 +58,8 @@ end
 % 4. Apply the decision rule (Eq.18): delta = |D_KL - hat_D_KL| / D_KL
 kk = best_orig;   % baseline D_KL (smallest among original pairs? Actually here it is the closest one, but variable name kept)
 k = best_sim;     % simulated hat_D_KL
-deta_k = abs(k - kk) / k;
-disp(['Redundancy rate (r): ', num2str(deta_k*100), '%']);
+Delta_k = abs(k - kk) / k;
+disp(['DETA_KL: ', num2str(Delta_k*100), '%']);
 
 %% Helper function: SIS simulation with given initial infected seeds
 function time_series = simulate_sis_with_seeds(G_graph, beta, gamma, Time_max, seed_nodes)
