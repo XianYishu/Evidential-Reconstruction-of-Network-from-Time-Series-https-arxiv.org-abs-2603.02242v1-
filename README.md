@@ -22,7 +22,7 @@ Given only binary time series of node states (infected/susceptible) from several
 
 | File | Description |
 |------|-------------|
-| `main.m` | Main reconstruction script (run this) |
+| `main_Code.m` | Main reconstruction script (run this) |
 | `sis_link_new.m` | SIS simulation + first‑level BPA fusion |
 | `similarity.m` | Compares reconstructed network with ground truth |
 | `compute_infection_jaccard.m` | Jaccard similarity for DR‑MS |
@@ -30,8 +30,18 @@ Given only binary time series of node states (infected/susceptible) from several
 | `KL.m` | Kullback‑Leibler divergence between two time series |
 | `simulate_sis_with_seeds.m` | SIS simulator with fixed initial infected nodes |
 | `network-Karate_adj_matrix.mat` | Zachary’s Karate Club (ground truth for testing) |
+| `estimated_gamma.m` | Script to display estimated gamma |
+| `KL_Validation.m` | Script to compute KL validation |
 
 ## 🚀 Getting started
+### Citation
+``bib
+@article{xian2026evidential,
+  title={Evidential Reconstruction of Network from Time Series},
+  author={Xian, Yishu and Zhang, Zhaobo and Zhang, Cai and Li, Meizhu and Zhang, Qi},
+  journal={arXiv preprint arXiv:2603.02242},
+  year={2026}
+}
 
 ### Prerequisites
 - **MATLAB R2020b** or later
@@ -44,18 +54,3 @@ Given only binary time series of node states (infected/susceptible) from several
 3. Open MATLAB, navigate to the folder, and run:
    ```matlab
    main_Code
-   estimated_gamma
-   KL_Validation
-   
-### example output
- ```matlab
-All simulations completed successfully
-Reconstruction rate (s): 96.1538%
-Redundancy rate (r): 1.2821%
-Estimated infection rate beta: 0.45464
-
-estimated_gamma
-Estimated recovery rate gamma = 0.90284
-
-KL_Validation
-Delta_KL: 1.43%
